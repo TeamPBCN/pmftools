@@ -127,7 +127,7 @@ namespace AutoUsc
             actionCombo.Select(2);
 
             var btnStart2 = mainWindow.FindFirstDescendant(cf => cf.ByClassName("Button").And(cf.ByName("Start")))?.AsButton();
-            btnStart2.Click();
+            btnStart2?.Click();
 
             while (!btnStart2.IsEnabled)
             {
@@ -142,6 +142,9 @@ namespace AutoUsc
                     File.Copy(projectOutput, project.Output);
                 }
             }
+
+            var btnClose = mainWindow.FindFirstDescendant(cf => cf.ByClassName("Button").And(cf.ByName("Close")))?.AsButton();
+            btnClose?.Click();
         }
 
         private void OpenCreateNewDialog()

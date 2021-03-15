@@ -17,13 +17,19 @@ namespace AutoUsc
             Parser.Default.ParseArguments<Options>(args)
                    .WithParsed<Options>(opts =>
                    {
-                       var robot = new UscRobot(opts.Executable);
-                       robot.Launch();
-                       var proj = robot.CreateNewProject(opts.ClipName, opts.ClipDescription, opts.ProjectName, opts.ProjectDescription, opts.Output);
-                       robot.AddVideoStream(Path.GetFullPath(opts.Video));
-                       robot.AddAudioStream(Path.GetFullPath(opts.Audio));
-                       robot.Compose(proj);
-                       robot.Close();
+                           var robot = new UscRobot(opts.Executable);
+                       try
+                       {
+                           robot.Launch();
+                           var proj = robot.CreateNewProject(opts.ClipName, opts.ClipDescription, opts.ProjectName, opts.ProjectDescription, opts.Output);
+                           robot.AddVideoStream(Path.GetFullPath(opts.Video));
+                           robot.AddAudioStream(Path.GetFullPath(opts.Audio));
+                           robot.Compose(proj);
+                       }
+                       finally
+                       {
+                           robot.Close();
+                       }
                    })
                    .WithNotParsed(errors =>
                    {
