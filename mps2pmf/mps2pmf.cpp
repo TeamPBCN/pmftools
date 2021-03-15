@@ -222,8 +222,10 @@ int WriteMpsContent(std::string *mpsPath, std::string *pmfPath)
         pmf.write(buf, readSize);
         mpsSize -= readSize;
     }
+    
     mps.close();
     pmf.close();
+    delete buf;
     return 0;
 }
 
