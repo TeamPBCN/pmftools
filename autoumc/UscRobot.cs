@@ -22,7 +22,14 @@ namespace AutoUsc
 
         public UscRobot(string executable)
         {
-            this.executable = executable;
+            if (executable == Options.DefaultExecutablePath)
+            {
+                this.executable = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, Options.DefaultExecutablePath);
+            }
+            else
+            {
+                this.executable = executable;
+            }
         }
 
         public void Launch()
@@ -48,37 +55,45 @@ namespace AutoUsc
         {
             UscProject proj = new UscProject(clipName, clipDesc, projName, projDesc, output);
 
-            OpenCreateNewDialog();
-            var newProjDialog = mainWindow.FindFirstDescendant(cf => cf.ByName("Create new clip"))?.AsWindow();
-            var edits = newProjDialog.FindAllDescendants(cf => cf.ByClassName("Edit"));
-            edits[0].AsTextBox().Enter(clipName);
-            edits[1].AsTextBox().Enter(clipDesc);
-            edits[2].AsTextBox().Enter(projName);
-            edits[3].AsTextBox().Enter(projDesc);
-
-
-            using (Keyboard.Pressing(VirtualKeyShort.ALT))
+            try
             {
-                Keyboard.Press(VirtualKeyShort.KEY_N);
+                OpenCreateNewDialog();
+                var newProjDialog = mainWindow.FindFirstDescendant(cf => cf.ByName("Create new clip"))?.AsWindow();
+                var edits = newProjDialog.FindAllDescendants(cf => cf.ByClassName("Edit"));
+                edits[0].AsTextBox().Enter(clipName);
+                edits[1].AsTextBox().Enter(clipDesc);
+                edits[2].AsTextBox().Enter(projName);
+                edits[3].AsTextBox().Enter(projDesc);
+
+
+                using (Keyboard.Pressing(VirtualKeyShort.ALT))
+                {
+                    Keyboard.Press(VirtualKeyShort.KEY_N);
+                }
+                Thread.Sleep(TimeSpan.FromSeconds(1));
+
+
+                var allBtn = newProjDialog.FindAllDescendants(cf => cf.ByClassName("Button"));
+                var cbPsp = allBtn.FirstOrDefault(e => e.Name == "PSP Movie Format (for game)")?.AsCheckBox();
+                if (cbPsp != null)
+                {
+                    cbPsp.IsChecked = true;
+                }
+
+                var btnFin = allBtn.FirstOrDefault(e => e.Properties.AutomationId.IsSupported && e.AutomationId == "12325")?.AsButton();
+                if (btnFin != null)
+                {
+                    btnFin.Click();
+                }
+
+                Thread.Sleep(1000);
+                return proj;
             }
-            Thread.Sleep(TimeSpan.FromSeconds(1));
-
-
-            var allBtn = newProjDialog.FindAllDescendants(cf => cf.ByClassName("Button"));
-            var cbPsp = allBtn.FirstOrDefault(e => e.Name == "PSP Movie Format (for game)")?.AsCheckBox();
-            if (cbPsp != null)
+            catch (Exception ex)
             {
-                cbPsp.IsChecked = true;
+                proj.Delete();
+                throw ex;
             }
-
-            var btnFin = allBtn.FirstOrDefault(e => e.Properties.AutomationId.IsSupported && e.AutomationId == "12325")?.AsButton();
-            if (btnFin != null)
-            {
-                btnFin.Click();
-            }
-
-            Thread.Sleep(1000);
-            return proj;
         }
 
         public void AddAudioStream(string path)
@@ -95,6 +110,7 @@ namespace AutoUsc
 
             Keyboard.Type(path);
             Keyboard.Press(VirtualKeyShort.ENTER);
+            Thread.Sleep(1000);
             btnOk.Click();
             Thread.Sleep(1000);
         }
@@ -113,6 +129,7 @@ namespace AutoUsc
 
             Keyboard.Type(path);
             Keyboard.Press(VirtualKeyShort.ENTER);
+            Thread.Sleep(1000);
             btnOk.Click();
             Thread.Sleep(1000);
         }
@@ -137,10 +154,7 @@ namespace AutoUsc
             if (!string.IsNullOrEmpty(project.Output))
             {
                 var projectOutput = project.ProjectOutput;
-                if (File.Exists(projectOutput))
-                {
-                    File.Copy(projectOutput, project.Output);
-                }
+                File.Copy(projectOutput, project.Output, true);
             }
 
             var btnClose = mainWindow.FindFirstDescendant(cf => cf.ByClassName("Button").And(cf.ByName("Close")))?.AsButton();

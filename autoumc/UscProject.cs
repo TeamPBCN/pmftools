@@ -14,6 +14,21 @@ namespace AutoUsc
             this.Output = output;
         }
 
+        public void Delete()
+        {
+            var projPath = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments), "UmdStreamComposer", "MuxWork", ProjectName);
+            if (Directory.Exists(projPath))
+            {
+                Directory.Delete(projPath, true);
+            }
+
+            projPath = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments), "UmdStreamComposer", "EncWork", ProjectName);
+            if (Directory.Exists(projPath))
+            {
+                Directory.Delete(projPath, true);
+            }
+        }
+
         public string ClipName { get; private set; }
         public string ClipDesc { get; private set; }
         public string ProjectName { get; private set; }

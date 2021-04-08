@@ -17,11 +17,12 @@ namespace AutoUsc
             Parser.Default.ParseArguments<Options>(args)
                    .WithParsed<Options>(opts =>
                    {
-                           var robot = new UscRobot(opts.Executable);
+                       UscProject proj = null;
+                       var robot = new UscRobot(opts.Executable);
                        try
                        {
                            robot.Launch();
-                           var proj = robot.CreateNewProject(opts.ClipName, opts.ClipDescription, opts.ProjectName, opts.ProjectDescription, opts.Output);
+                           proj = robot.CreateNewProject(opts.ClipName, opts.ClipDescription, opts.ProjectName, opts.ProjectDescription, opts.Output);
                            robot.AddVideoStream(Path.GetFullPath(opts.Video));
                            robot.AddAudioStream(Path.GetFullPath(opts.Audio));
                            robot.Compose(proj);
@@ -29,6 +30,8 @@ namespace AutoUsc
                        finally
                        {
                            robot.Close();
+                           proj?.Delete();
+
                        }
                    })
                    .WithNotParsed(errors =>
@@ -40,7 +43,9 @@ namespace AutoUsc
 
     public class Options
     {
-        [Option('x', "executable", HelpText = "Path to UmdStreamComposer.exe", Default = ".\\Umd Stream Composer\\bin\\UmdStreamComposer.exe", Required = false)]
+        public const string DefaultExecutablePath = ".\\Umd Stream Composer\\bin\\UmdStreamComposer.exe";
+
+        [Option('x', "executable", HelpText = "Path to UmdStreamComposer.exe", Default = DefaultExecutablePath, Required = false)]
         public string Executable { get; set; }
 
         [Option("cn", HelpText = "Clip name", Required = true)]
