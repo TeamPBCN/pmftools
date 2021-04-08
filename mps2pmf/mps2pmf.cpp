@@ -31,10 +31,10 @@ int main(int argc, const char *argv[])
         .set_tab_expansion()
         .allow_unrecognised_options()
         .add_options()                                                           //
-        ("o,pmf", "PMF file path", cxxopts::value<std::string>())                //
         ("i,mps", "MPS file path", cxxopts::value<std::string>())                //
-        ("m,min", "Minuts of movie time", cxxopts::value<int>())                 //
-        ("s,sec", "Second of movie time", cxxopts::value<int>())                 //
+        ("o,pmf", "PMF file path", cxxopts::value<std::string>())                //
+        ("m,min", "Minutes of movie duration", cxxopts::value<int>())            //
+        ("s,sec", "Seconds of movie duration", cxxopts::value<int>())            //
         ("c,icon", "Make icon.", cxxopts::value<bool>()->default_value("false")) //
         ("help", "Print help");
     try
@@ -222,7 +222,7 @@ int WriteMpsContent(std::string *mpsPath, std::string *pmfPath)
         pmf.write(buf, readSize);
         mpsSize -= readSize;
     }
-    
+
     mps.close();
     pmf.close();
     delete buf;

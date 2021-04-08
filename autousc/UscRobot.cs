@@ -151,14 +151,14 @@ namespace AutoUsc
                 Thread.Sleep(1000);
             }
 
+            var btnClose = mainWindow.FindFirstDescendant(cf => cf.ByClassName("Button").And(cf.ByName("Close")))?.AsButton();
+            btnClose?.Click();
+
             if (!string.IsNullOrEmpty(project.Output))
             {
                 var projectOutput = project.ProjectOutput;
                 File.Copy(projectOutput, project.Output, true);
             }
-
-            var btnClose = mainWindow.FindFirstDescendant(cf => cf.ByClassName("Button").And(cf.ByName("Close")))?.AsButton();
-            btnClose?.Click();
         }
 
         private void OpenCreateNewDialog()
