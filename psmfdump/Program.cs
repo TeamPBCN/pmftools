@@ -10,9 +10,10 @@ namespace psmfdump
         {
             if (args.Length == 0)
             {
-                Console.WriteLine("PSP Movie Format dumper\nCreated by LITTOMA from Team PB.");
+                Console.WriteLine("PSP Movie Format (PMF) dumper\nCreated by LITTOMA from Team PB.");
                 Console.WriteLine("Usage: psmfdump <PSMF File> [-a|--audio Audio path] [-v|--video Video path]");
                 Console.WriteLine("\n\nNOTE: This tool can only works with pmf video containing 1 video and 1 audio stream. Otherwise the output file will crush.");
+                return;
             }
 
             string vp = string.Empty;
