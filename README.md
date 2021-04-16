@@ -13,14 +13,14 @@ Convert PMF files to MP4 for editing
 ```
 Step 1: put PMF files into `input/pmf`
 Step 2: run `pmf_to_mp4.bat`
-Step 3: enjoy ~^.^~!
+Step 3: find your converted files in `output/mp4` and enjoy ~^.^~!
 ```
 
 Convert AVI files to PMF
 ```
 Step 1: put AVI files into `input/avi`
 Step 2: run `avi_to_pmf.bat`
-Step 3: enjoy ~^.^~!
+Step 3: find your converted files in `output/pmf` and enjoy ~^.^~!
 ```
 
 # Verified by 吉🐣 PRODUCTION*
