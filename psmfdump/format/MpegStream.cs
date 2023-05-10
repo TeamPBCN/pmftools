@@ -236,6 +236,7 @@ namespace VGMToolbox.format
                 uint currentStreamKey;  // hash key for each file
                 bool isAudioBlock;
                 string audioFileExtension;
+                uint currentAudioIndex = 0;
 
                 // look for first packet
                 currentOffset = this.GetStartOffset(fs, currentOffset);
@@ -351,7 +352,8 @@ namespace VGMToolbox.format
                                                 if (this.IsThisAnAudioBlock(currentBlockId))
                                                 {
                                                     audioFileExtension = this.GetAudioFileExtension(fs, currentOffset);
-                                                    outputFileName = demuxOptions.audioPath.Replace(".oma", ".at3");
+                                                    outputFileName = demuxOptions.audioPath.Replace(".oma", $".{currentAudioIndex}.at3");
+                                                    currentAudioIndex++;
 
                                                     if (!this.StreamIdFileType.ContainsKey(streamId))
                                                     {
